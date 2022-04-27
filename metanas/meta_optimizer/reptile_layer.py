@@ -16,9 +16,9 @@ GNU Affero General Public License for more details.
 import torch
 
 
-class NAS_Reptile:
-    def __init__(self, meta_model, config):
-        self.meta_model = meta_model
+class NAS_Reptile_layer:
+    def __init__(self, meta_model_cell, config):
+        self.meta_model_cell = meta_model_cell
         self.config = config
 
         if config.w_meta_optim is None:
@@ -30,7 +30,7 @@ class NAS_Reptile:
             self.w_meta_optim = self.config.w_meta_optim
 
         if config.a_meta_optim is None:
-            if meta_model.alphas() is not None:
+            if meta_model_cell.alphas() is not None:
                 print("found alphas, set meta optim")
                 self.a_meta_optim = torch.optim.Adam(
                     self.meta_model.alphas(), lr=self.config.a_meta_lr
@@ -41,14 +41,14 @@ class NAS_Reptile:
         else:
             self.a_meta_optim = self.config.a_meta_optim
 
-    def step(self, task_infos):
+    def step(self, layer_infos):
 
         # Extract infos provided by the task_optimizer
         # k_way = task_infos[0].k_way
         # data_shape = task_infos[0].data_shape
 
-        w_tasks = [task_info.w_task for task_info in task_infos]
-        a_tasks = [task_info.a_task for task_info in task_infos]
+        w_layers = [layer_info.w_layer for layer_info in layer_infos]
+        a_layers = [layer_info.a_layer for layer_info in layer_infos]
         self.w_meta_optim.zero_grad()
         self.a_meta_optim.zero_grad()
 
@@ -56,8 +56,9 @@ class NAS_Reptile:
 
         w_finite_differences = list()
         a_finite_differences = list()
+        
 
-        for task_info in task_infos:
+        for layer_info in layer_infos:
             w_finite_differences += [
                 get_finite_difference(self.meta_model.named_weights(), task_info.w_task)
             ]
