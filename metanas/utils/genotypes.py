@@ -24,7 +24,7 @@ from collections import namedtuple
 import torch
 import torch.nn as nn
 
-from metanas.models import ops, search_cnn
+from models import ops, search_cnn
 
 
 Genotype = namedtuple("Genotype", "normal normal_concat reduce reduce_concat")

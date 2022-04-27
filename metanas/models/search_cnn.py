@@ -31,8 +31,8 @@ from torch.nn.parallel._functions import Broadcast
 import scipy.special
 import copy
 
-from metanas.models import ops
-from metanas.utils import genotypes as gt
+from models import ops
+from utils import genotypes as gt
 
 def SoftMax(logits, params, dim=-1):
 
@@ -651,6 +651,7 @@ class SearchCNN(nn.Module):
             cell = SearchCell(
                 n_nodes, C_pp, C_p, C_cur, reduction_p, reduction, PRIMITIVES
             )
+            
             reduction_p = reduction
             self.cells.append(cell)
             C_cur_out = C_cur * n_nodes

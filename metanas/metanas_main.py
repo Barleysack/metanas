@@ -29,14 +29,14 @@ import numpy as np
 import pickle
 import torch
 
-from metanas.meta_optimizer.reptile import NAS_Reptile
-from metanas.models.search_cnn import SearchCNNController
-from metanas.models.augment_cnn import AugmentCNN
-from metanas.models.maml_model import MamlModel
-from metanas.task_optimizer.darts import Darts
-from metanas.utils import genotypes as gt
-from metanas.utils import utils
-
+from meta_optimizer.reptile import NAS_Reptile
+from models.search_cnn import SearchCNNController
+from models.augment_cnn import AugmentCNN
+from models.maml_model import MamlModel
+from task_optimizer.darts import Darts
+from utils import genotypes as gt
+from utils import utils
+from tqdm import tqdm
 
 def meta_architecture_search(
     config, task_optimizer_cls=Darts, meta_optimizer_cls=NAS_Reptile
@@ -64,7 +64,7 @@ def meta_architecture_search(
         print("Not using hp_setting.")
 
     if config.use_torchmeta_loader:
-        from metanas.tasks.torchmeta_loader import (
+        from tasks.torchmeta_loader import (
             OmniglotFewShot,
             MiniImageNetFewShot as miniImageNetFewShot,
         )
@@ -79,7 +79,7 @@ def meta_architecture_search(
         raise RuntimeError(f"Dataset {config.dataset} is not supported.")
 
     # task distribution
-    task_distribution = task_distribution_class(config, download=False)
+    task_distribution = task_distribution_class(config, download=True)
 
     # meta model
     normalizer = _init_alpha_normalizer(
@@ -90,6 +90,7 @@ def meta_architecture_search(
         config.normalizer_temp_anneal_mode,
     )
     meta_model = _build_model(config, task_distribution, normalizer)
+    
 
     # task & meta optimizer
     config, meta_optimizer = _init_meta_optimizer(
@@ -394,6 +395,7 @@ def train(
     )
 
     for meta_epoch in range(config.start_epoch, config.meta_epochs + 1):
+        
 
         time_es = time.time()
         meta_train_batch = task_distribution.sample_meta_train()
@@ -403,18 +405,22 @@ def train(
 
         # Each task starts with the current meta state
         meta_state = copy.deepcopy(meta_model.state_dict())
+        meta_layer_state = copy.deepcopy(meta_model.net.cells[0].state_dict())
+        
         global_progress = f"[Meta-Epoch {meta_epoch:2d}/{config.meta_epochs}]"
         task_infos = []
-
+        
         time_bs = time.time()
-        for task in meta_train_batch:
+        for task in tqdm(meta_train_batch):
+            
             task_infos += [
                 task_optimizer.step(
                     task, epoch=meta_epoch, global_progress=global_progress
                 )
             ]
-            meta_model.load_state_dict(meta_state)
 
+            meta_model.load_state_dict(meta_state)
+        
         time_be = time.time()
 
         batch_time.update(time_be - time_bs)
@@ -423,11 +429,12 @@ def train(
         train_test_accu.append(config.top1_logger.avg)
 
         # do a meta update
+        
         meta_optimizer.step(task_infos)
-
         # update meta LR
         if (a_meta_lr_scheduler is not None) and (meta_epoch >= config.warm_up_epochs):
             a_meta_lr_scheduler.step()
+
 
         if w_meta_lr_scheduler is not None:
             w_meta_lr_scheduler.step()
@@ -462,7 +469,9 @@ def train(
             global_progress = f"[Meta-Epoch {meta_epoch:2d}/{config.meta_epochs}]"
             task_infos = []
 
-            for task in meta_test_batch:
+            for task in tqdm(meta_test_batch):
+                
+
                 task_infos += [
                     task_optimizer.step(
                         task,
@@ -472,6 +481,8 @@ def train(
                     )
                 ]
                 meta_model.load_state_dict(meta_state)
+                
+            
 
             config.logger.info(
                 f"Train: [{meta_epoch:2d}/{config.meta_epochs}] "

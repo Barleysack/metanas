@@ -22,7 +22,7 @@ cf. 3rd-party-licenses.txt in root directory.
 import torch
 import torch.nn as nn
 
-from metanas.utils import genotypes as gt
+from utils import genotypes as gt
 
 
 OPS = {

@@ -20,7 +20,7 @@ from torchvision.transforms import Compose, Resize, ToTensor
 from torchmeta.utils.data import BatchMetaDataLoader
 from torchmeta.datasets.helpers import miniimagenet
 
-from metanas.tasks.core import TaskDistribution, Task
+from tasks.core import TaskDistribution, Task
 
 
 def sample_meta_batch(
@@ -66,7 +66,7 @@ def create_og_data_loader(
     n_query,
     batch_size,
     num_workers,
-    download=False,
+    download=True,
     use_vinyals_split=False,
     seed=None,
 ):
@@ -118,7 +118,7 @@ def create_miniimagenet_data_loader(
     n_query,
     batch_size,
     num_workers,
-    download=False,
+    download=True,
     seed=None,
 ):
     """Create a torchmeta BatchMetaDataLoader for MiniImagenet
@@ -157,7 +157,7 @@ def create_miniimagenet_data_loader(
 class TorchmetaTaskDistribution(TaskDistribution):
     """Class to create tasks for meta learning using torchmeta data loaders"""
 
-    def __init__(self, config, n_channels, input_size, download=False):
+    def __init__(self, config, n_channels, input_size, download=True):
         self.n_input_channels = n_channels
         self.input_size = input_size
         self.n_classes = config.k  # k-way classification
@@ -213,7 +213,7 @@ class TorchmetaTaskDistribution(TaskDistribution):
 
 
 class OmniglotFewShot(TorchmetaTaskDistribution):
-    def __init__(self, config, download=False):
+    def __init__(self, config, download=True):
         super().__init__(config, 1, 28, download)
         self.use_vinyals_split = config.use_vinyals_split
         self.train_loader = create_og_data_loader(
@@ -287,7 +287,7 @@ class OmniglotFewShot(TorchmetaTaskDistribution):
 class MiniImageNetFewShot(TorchmetaTaskDistribution):
     """Class to create mini-imagenet-based tasks for meta learning"""
 
-    def __init__(self, config, download=False):
+    def __init__(self, config, download=True):
         super().__init__(config, 3, 84, download)
 
         self.train_loader = create_miniimagenet_data_loader(

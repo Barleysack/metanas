@@ -23,8 +23,8 @@ cf. 3rd-party-licenses.txt in root directory.
 import torch
 import torch.nn as nn
 
-from metanas.models import ops
-from metanas.utils import genotypes as gt
+from models import ops
+from utils import genotypes as gt
 
 
 class AugmentCNN(nn.Module):

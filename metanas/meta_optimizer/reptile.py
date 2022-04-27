@@ -49,7 +49,10 @@ class NAS_Reptile:
 
         w_tasks = [task_info.w_task for task_info in task_infos]
         a_tasks = [task_info.a_task for task_info in task_infos]
-
+        f = open("task_info.txt",'w')
+        f.write(str(task_infos[0].w_task))
+        f.close()
+        exit(0)
         self.w_meta_optim.zero_grad()
         self.a_meta_optim.zero_grad()
 

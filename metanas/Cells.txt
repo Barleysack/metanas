@@ -1,0 +1,2923 @@
+SearchCNNController(
+  (criterion): CrossEntropyLoss()
+  (alpha_normal): ParameterList(
+      (0): Parameter containing: [torch.cuda.FloatTensor of size 2x7 (GPU 0)]
+      (1): Parameter containing: [torch.cuda.FloatTensor of size 3x7 (GPU 0)]
+      (2): Parameter containing: [torch.cuda.FloatTensor of size 4x7 (GPU 0)]
+  )
+  (alpha_reduce): ParameterList(
+      (0): Parameter containing: [torch.cuda.FloatTensor of size 2x7 (GPU 0)]
+      (1): Parameter containing: [torch.cuda.FloatTensor of size 3x7 (GPU 0)]
+      (2): Parameter containing: [torch.cuda.FloatTensor of size 4x7 (GPU 0)]
+  )
+  (alpha_pw_normal): ParameterList(
+      (0): Parameter containing: [torch.cuda.FloatTensor of size 1 (GPU 0)]
+      (1): Parameter containing: [torch.cuda.FloatTensor of size 3 (GPU 0)]
+      (2): Parameter containing: [torch.cuda.FloatTensor of size 6 (GPU 0)]
+  )
+  (alpha_pw_reduce): ParameterList(
+      (0): Parameter containing: [torch.cuda.FloatTensor of size 1 (GPU 0)]
+      (1): Parameter containing: [torch.cuda.FloatTensor of size 3 (GPU 0)]
+      (2): Parameter containing: [torch.cuda.FloatTensor of size 6 (GPU 0)]
+  )
+  (net): SearchCNN(
+    (stem): Sequential(
+      (0): Conv2d(1, 84, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(84, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (cells): ModuleList(
+      (0): SearchCell(
+        (preproc0): StdConv(
+          (net): Sequential(
+            (0): ReLU()
+            (1): Conv2d(84, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (2): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+          )
+        )
+        (preproc1): StdConv(
+          (net): Sequential(
+            (0): ReLU()
+            (1): Conv2d(84, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (2): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+          )
+        )
+        (dag): ModuleList(
+          (0): ModuleList(
+            (0): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (1): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+          )
+          (1): ModuleList(
+            (0): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (1): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (2): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+          )
+          (2): ModuleList(
+            (0): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (1): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (2): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (3): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+          )
+        )
+      )
+      (1): SearchCell(
+        (preproc0): StdConv(
+          (net): Sequential(
+            (0): ReLU()
+            (1): Conv2d(84, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (2): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+          )
+        )
+        (preproc1): StdConv(
+          (net): Sequential(
+            (0): ReLU()
+            (1): Conv2d(84, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (2): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+          )
+        )
+        (dag): ModuleList(
+          (0): ModuleList(
+            (0): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=2, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Sequential(
+                  (0): FactorizedReduce(
+                    (relu): ReLU()
+                    (conv1): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (conv2): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(2, 2), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (1): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=2, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Sequential(
+                  (0): FactorizedReduce(
+                    (relu): ReLU()
+                    (conv1): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (conv2): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(2, 2), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+          )
+          (1): ModuleList(
+            (0): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=2, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Sequential(
+                  (0): FactorizedReduce(
+                    (relu): ReLU()
+                    (conv1): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (conv2): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(2, 2), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (1): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=2, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Sequential(
+                  (0): FactorizedReduce(
+                    (relu): ReLU()
+                    (conv1): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (conv2): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(2, 2), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (2): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+          )
+          (2): ModuleList(
+            (0): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=2, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Sequential(
+                  (0): FactorizedReduce(
+                    (relu): ReLU()
+                    (conv1): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (conv2): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(2, 2), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (1): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=2, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Sequential(
+                  (0): FactorizedReduce(
+                    (relu): ReLU()
+                    (conv1): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (conv2): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(2, 2), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (2): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (3): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+          )
+        )
+      )
+      (2): SearchCell(
+        (preproc0): FactorizedReduce(
+          (relu): ReLU()
+          (conv1): Conv2d(84, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+          (conv2): Conv2d(84, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+          (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+        )
+        (preproc1): StdConv(
+          (net): Sequential(
+            (0): ReLU()
+            (1): Conv2d(84, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (2): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+          )
+        )
+        (dag): ModuleList(
+          (0): ModuleList(
+            (0): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=2, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Sequential(
+                  (0): FactorizedReduce(
+                    (relu): ReLU()
+                    (conv1): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (conv2): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(2, 2), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (1): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=2, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Sequential(
+                  (0): FactorizedReduce(
+                    (relu): ReLU()
+                    (conv1): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (conv2): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(2, 2), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+          )
+          (1): ModuleList(
+            (0): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=2, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Sequential(
+                  (0): FactorizedReduce(
+                    (relu): ReLU()
+                    (conv1): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (conv2): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(2, 2), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (1): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=2, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Sequential(
+                  (0): FactorizedReduce(
+                    (relu): ReLU()
+                    (conv1): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (conv2): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(2, 2), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (2): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+          )
+          (2): ModuleList(
+            (0): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=2, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Sequential(
+                  (0): FactorizedReduce(
+                    (relu): ReLU()
+                    (conv1): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (conv2): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(2, 2), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (1): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=2, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Sequential(
+                  (0): FactorizedReduce(
+                    (relu): ReLU()
+                    (conv1): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (conv2): Conv2d(28, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(2, 2), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(2, 2), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (2): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (3): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+          )
+        )
+      )
+      (3): SearchCell(
+        (preproc0): FactorizedReduce(
+          (relu): ReLU()
+          (conv1): Conv2d(84, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+          (conv2): Conv2d(84, 14, kernel_size=(1, 1), stride=(2, 2), bias=False)
+          (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+        )
+        (preproc1): StdConv(
+          (net): Sequential(
+            (0): ReLU()
+            (1): Conv2d(84, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (2): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+          )
+        )
+        (dag): ModuleList(
+          (0): ModuleList(
+            (0): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (1): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+          )
+          (1): ModuleList(
+            (0): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (1): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (2): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+          )
+          (2): ModuleList(
+            (0): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (1): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (2): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+            (3): MixedOp(
+              (_ops): ModuleList(
+                (0): Sequential(
+                  (0): PoolBN(
+                    (pool): MaxPool2d(kernel_size=3, stride=1, padding=1, dilation=1, ceil_mode=False)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (1): Sequential(
+                  (0): PoolBN(
+                    (pool): AvgPool2d(kernel_size=3, stride=1, padding=1)
+                    (bn): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (2): Identity()
+                (3): Sequential(
+                  (0): FacConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(1, 5), stride=(1, 1), padding=(0, 2), bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(5, 1), stride=(1, 1), padding=(2, 0), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (4): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (5): Sequential(
+                  (0): SepConv(
+                    (net): Sequential(
+                      (0): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                      (1): DilConv(
+                        (net): Sequential(
+                          (0): ReLU()
+                          (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), groups=28, bias=False)
+                          (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                          (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                        )
+                      )
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+                (6): Sequential(
+                  (0): DilConv(
+                    (net): Sequential(
+                      (0): ReLU()
+                      (1): Conv2d(28, 28, kernel_size=(3, 3), stride=(1, 1), padding=(2, 2), dilation=(2, 2), groups=28, bias=False)
+                      (2): Conv2d(28, 28, kernel_size=(1, 1), stride=(1, 1), bias=False)
+                      (3): BatchNorm2d(28, eps=1e-05, momentum=0.1, affine=False, track_running_stats=True)
+                    )
+                  )
+                  (1): DropPath_(p=0.0, inplace)
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+    (gap): AdaptiveAvgPool2d(output_size=1)
+    (linear): Linear(in_features=84, out_features=5, bias=True)
+  )
+)

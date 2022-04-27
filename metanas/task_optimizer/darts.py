@@ -24,8 +24,8 @@ import torch
 import torch.nn as nn
 from collections import OrderedDict, namedtuple
 
-from metanas.utils import utils
-from metanas.models.search_cnn import SearchCNNController
+from utils import utils
+from models.search_cnn import SearchCNNController
 
 
 class Darts:
