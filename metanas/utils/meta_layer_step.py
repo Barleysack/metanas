@@ -43,7 +43,36 @@ class layer_Reptile:
 
         
 
-        for layer_name , layer_weight_tensor in self.meta_cell
+        w_finite_differences += [
+                get_finite_difference(self.meta_model.named_weights(), task_info.w_task)
+        ]
+        a_finite_differences += [
+                get_finite_difference(self.meta_model.named_alphas(), task_info.a_task)
+        ]
+
+        mean_w_task_finitediff = {
+            k: get_mean_gradient_from_key(k, w_finite_differences)
+            for k in w_task[0].keys()
+        }
+
+        mean_a_task_finitediff = {
+            k: get_mean_gradient_from_key(k, a_finite_differences)
+            for k in a_task[0].keys()
+        }
+
+
+        for layer_name, layer_weight_tensor in self.meta_model.named_weights():
+            if layer_weight_tensor.grad is not None:
+                layer_weight_tensor.grad.data.add_(-mean_w_task_finitediff[layer_name])
+
+        for layer_name, layer_weight_tensor in self.meta_model.named_alphas():
+            if layer_weight_tensor.grad is not None:
+
+                layer_weight_tensor.grad.data.add_(-mean_a_task_finitediff[layer_name])
+
+        self.w_meta_optim.step()
+        if self.a_meta_optim is not None:
+            self.a_meta_optim.step()
 
 # some helper functions
 def get_finite_difference(meta_weights, task_weights):
