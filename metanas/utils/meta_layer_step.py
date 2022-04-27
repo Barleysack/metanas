@@ -32,7 +32,7 @@ class layer_Reptile:
     def step(self, task_info):
 
         # just use single-task info for the steps. 
-
+        task_info = task_info[0]
         w_task = task_info.w_task
         a_task = task_info.a_task
 
@@ -43,12 +43,8 @@ class layer_Reptile:
 
         
 
-        w_finite_differences += [
-                get_finite_difference(self.meta_model.named_weights(), task_info.w_task)
-        ]
-        a_finite_differences += [
-                get_finite_difference(self.meta_model.named_alphas(), task_info.a_task)
-        ]
+        w_finite_differences += [get_finite_difference(self.meta_model.named_weights(), task_info.w_task)]
+        a_finite_differences += [get_finite_difference(self.meta_model.named_alphas(), task_info.a_task)]
 
         mean_w_task_finitediff = {
             k: get_mean_gradient_from_key(k, w_finite_differences)

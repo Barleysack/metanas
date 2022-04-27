@@ -79,6 +79,7 @@ class NAS_Reptile:
             for k in a_tasks[0].keys()
         }
 
+
         for layer_name, layer_weight_tensor in self.meta_model.named_weights():
             if layer_weight_tensor.grad is not None:
                 layer_weight_tensor.grad.data.add_(-mean_w_task_finitediff[layer_name])
