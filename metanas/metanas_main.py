@@ -346,6 +346,7 @@ def train(
     task_distribution,
     task_optimizer,
     meta_optimizer,
+    meta_cell_optimizer,
     train_info=None,
 ):
     """Meta-training loop
@@ -412,13 +413,14 @@ def train(
         
         time_bs = time.time()
         for task in tqdm(meta_train_batch):
-            
-            task_infos += [
-                task_optimizer.step(
+            current_task_info = task_optimizer.step(
                     task, epoch=meta_epoch, global_progress=global_progress
-                )
-            ]
-
+            )
+            task_infos += [current_task_info]
+            
+            meta_cell_optimizer.step(current_task_info)
+            # meta_layer_reptile 가동 및 업데이트 , 
+            # 궁금합니다. 지금은 각 태스크 마다 레이어 별 합침을 사용합니다. 
             meta_model.load_state_dict(meta_state)
         
         time_be = time.time()
