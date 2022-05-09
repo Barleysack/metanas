@@ -643,8 +643,8 @@ class SearchCNN(nn.Module):
         for i in range(n_layers):
             # Reduce featuremap size and double channels in 1/3 and 2/3 layer.
             if i in reduction_layers:
-                C_cur *= feature_scale_rate
-                reduction = True
+                # C_cur *= feature_scale_rate
+                reduction = False
             else:
                 reduction = False
 
@@ -719,10 +719,15 @@ class SearchCNN(nn.Module):
                 weights_pw_normal = sparsify_pairwise_alphas(weights_pw_normal)
                 weights_pw_reduce = sparsify_pairwise_alphas(weights_pw_reduce)
 
+        
         for cell in self.cells:
             weights = weights_reduce if cell.reduction else weights_normal
             weights_in = weights_in_reduce if cell.reduction else weights_in_normal
             weights_pw = weights_pw_reduce if cell.reduction else weights_pw_normal
+            
+            
+            
+
             s0, s1 = s1, cell(
                 s0,
                 s1,
@@ -731,13 +736,12 @@ class SearchCNN(nn.Module):
                 weights_pw,
                 alpha_prune_threshold=alpha_prune_threshold,
             )
-
         out = self.gap(s1)
         out = out.view(out.size(0), -1)  # flatten
         logits = self.linear(out)
         return logits
 
-
+    
 def sparsify_alphas(w_input):
     """Sparsify regular (normalized) alphas
 

@@ -213,7 +213,7 @@ class Darts:
                 x_test, y_test = batch
                 x_test = x_test.to(self.config.device, non_blocking=True)
                 y_test = y_test.to(self.config.device, non_blocking=True)
-
+ 
                 if isinstance(self.model, SearchCNNController):
                     logits = self.model(
                         x_test, sparsify_input_alphas=sparsify_input_alphas
@@ -269,7 +269,11 @@ def train(
 ):
 
     model.train()
+    initial_model_weight = list(model.weights())
+    initial_model_alpha = list(model.alphas())
 
+    print(sum(initial_model_weight))
+    exit(0)
     for step, ((train_X, train_y), (val_X, val_y)) in enumerate(
         zip(task.train_loader, task.valid_loader)
     ):
@@ -283,6 +287,8 @@ def train(
             alpha_optim.zero_grad()
             if config.do_unrolled_architecture_steps:
                 architect.virtual_step(train_X, train_y, lr, w_optim)  # (calc w`)
+
+                # add a_accum here, start from here _ bosung
             architect.backward(train_X, train_y, val_X, val_y, lr, w_optim)
 
             alpha_optim.step()
@@ -295,6 +301,16 @@ def train(
         loss.backward()
         nn.utils.clip_grad_norm_(model.weights(), config.w_grad_clip)
         w_optim.step()
+    
+    task_specific_weight = copy.deepcopy(model.weights)
+
+    w_const_task = torch.mean(initial_model_weight) - torch.mean(task_specific_weight) / lr
+    a_const_task = 0
+
+    if sum(w_const_task)== 0 :
+        print("0")
+
+    
 
 
 class Architect:
@@ -356,8 +372,10 @@ class Architect:
 
         # compute gradient
         v_alphas = tuple(self.v_net.alphas())
+        
         v_weights = tuple(self.v_net.weights())
-        v_grads = torch.autograd.grad(loss, v_alphas + v_weights)
+        
+        v_grads = torch.autograd.grad(loss, v_alphas + v_weights, allow_unused=True)
         dalpha = v_grads[: len(v_alphas)]
         dw = v_grads[len(v_alphas) :]
 

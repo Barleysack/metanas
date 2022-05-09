@@ -29,14 +29,14 @@ args=(
     # number classes  
     --k 5 \
     # test examples per class
-    --q 1 \
+    --q 5
 
     --meta_model_prune_threshold 0.01 \
     --alpha_prune_threshold 0.01 \
     # Meta Learning
     --meta_model searchcnn \
     --meta_epochs 1 \
-    --warm_up_epochs 1 \
+    --warm_up_epochs 0 \
     --use_pairwise_input_alphas \
     --eval_freq 1 \
     --eval_epochs 1 \
@@ -50,7 +50,7 @@ args=(
     # Architectures
     --init_channels 28 \
     --layers 4 \
-    # --reduction_layers 1 3 \ #because we cannot consider dimension this time
+    --reduction_layers 1 3 \
     
     --use_first_order_darts \
 

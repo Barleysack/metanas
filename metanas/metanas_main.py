@@ -418,7 +418,6 @@ def train(
             )
             task_infos += [current_task_info]
             
-            meta_cell_optimizer.step(current_task_info)
             # meta_layer_reptile 가동 및 업데이트 , 
             # 궁금합니다. 지금은 각 태스크 마다 레이어 별 합침을 사용합니다. 
             meta_model.load_state_dict(meta_state)

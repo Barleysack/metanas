@@ -1,0 +1,39 @@
+(Parameter containing:
+tensor([[-0.0003, -0.0012,  0.0010, -0.0006,  0.0006,  0.0005, -0.0004],
+        [-0.0010,  0.0013,  0.0007, -0.0013, -0.0012, -0.0001, -0.0009]],
+       device='cuda:0', requires_grad=True), Parameter containing:
+tensor([[-9.0218e-04, -1.5081e-05,  1.3856e-03,  2.5785e-03,  1.1414e-03,
+          9.6476e-05, -6.2491e-05],
+        [ 8.2685e-04,  5.5987e-04, -7.7759e-04,  3.3392e-04,  1.7591e-04,
+          4.8627e-04,  1.0702e-03],
+        [ 1.9540e-05,  1.1213e-03, -1.4873e-03, -2.0432e-04, -1.0466e-03,
+         -1.5772e-03,  4.2692e-04]], device='cuda:0', requires_grad=True), Parameter containing:
+tensor([[ 7.1204e-04, -2.0682e-04, -1.5239e-03,  2.3143e-04,  2.8327e-03,
+          6.3720e-04,  2.2088e-04],
+        [ 3.5019e-04, -1.3639e-03, -1.6593e-03,  5.1184e-05, -3.0831e-04,
+          2.6541e-04, -1.4414e-04],
+        [ 5.4069e-04, -1.5476e-03,  6.4552e-04, -1.1382e-03,  6.9732e-04,
+         -4.6476e-04,  1.2195e-03],
+        [-4.7042e-05, -1.0914e-03,  1.0223e-03,  2.1128e-04,  3.0615e-05,
+          3.0247e-04, -8.6756e-05]], device='cuda:0', requires_grad=True), Parameter containing:
+tensor([[ 6.1810e-04, -2.3848e-04,  2.4509e-05, -4.9123e-04, -5.9134e-05,
+         -1.5653e-03,  4.2580e-04],
+        [-1.4818e-03, -4.7657e-04,  2.4804e-04,  1.5593e-04, -1.6074e-04,
+          4.1723e-04,  1.0004e-03]], device='cuda:0', requires_grad=True), Parameter containing:
+tensor([[-0.0004,  0.0002,  0.0006,  0.0009, -0.0009, -0.0005,  0.0009],
+        [ 0.0020,  0.0015,  0.0002, -0.0011, -0.0005,  0.0005,  0.0010],
+        [-0.0014,  0.0002,  0.0006,  0.0003, -0.0017,  0.0018,  0.0002]],
+       device='cuda:0', requires_grad=True), Parameter containing:
+tensor([[-0.0009, -0.0006,  0.0006, -0.0002, -0.0006,  0.0013,  0.0001],
+        [-0.0003,  0.0018, -0.0014, -0.0002, -0.0010,  0.0011, -0.0006],
+        [-0.0010, -0.0005, -0.0003,  0.0009, -0.0012,  0.0004,  0.0011],
+        [-0.0007, -0.0005,  0.0007, -0.0003, -0.0002, -0.0002,  0.0006]],
+       device='cuda:0', requires_grad=True), Parameter containing:
+tensor([-0.0004], device='cuda:0', requires_grad=True), Parameter containing:
+tensor([-0.0002,  0.0004,  0.0002], device='cuda:0', requires_grad=True), Parameter containing:
+tensor([ 4.9174e-04,  5.3074e-05, -7.7028e-04, -7.0743e-04,  2.6548e-04,
+         1.1025e-03], device='cuda:0', requires_grad=True), Parameter containing:
+tensor([-0.0013], device='cuda:0', requires_grad=True), Parameter containing:
+tensor([ 0.0003,  0.0018, -0.0012], device='cuda:0', requires_grad=True), Parameter containing:
+tensor([-0.0005,  0.0031,  0.0011, -0.0005, -0.0005, -0.0002], device='cuda:0',
+       requires_grad=True))
