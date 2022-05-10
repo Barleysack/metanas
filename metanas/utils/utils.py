@@ -245,8 +245,11 @@ def save_checkpoint(state, ckpt_dir, is_best=False):
 
 
 def count_params(net):
+    print(list(net.parameters())[0].size())
     return sum(p.numel() for p in net.parameters())
 
+def count_parameters_in_MB(model):
+  return np.sum(np.prod(v.size())*32 for name, v in model.named_parameters() if "auxiliary" not in name)/8e6
 
 def save_state(
     meta_model,

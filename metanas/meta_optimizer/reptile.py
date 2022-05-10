@@ -14,7 +14,7 @@ GNU Affero General Public License for more details.
 """
 
 import torch
-
+from utils import utils
 
 class NAS_Reptile:
     def __init__(self, meta_model, config):
@@ -49,10 +49,8 @@ class NAS_Reptile:
 
         w_tasks = [task_info.w_task for task_info in task_infos]
         a_tasks = [task_info.a_task for task_info in task_infos]
-        f = open("task_info.txt",'w')
-        f.write(str(task_infos[0].w_task))
-        f.close()
         
+        print("MB log, " ,utils.count_parameters_in_MB(self.meta_model.net))
         self.w_meta_optim.zero_grad()
         self.a_meta_optim.zero_grad()
 

@@ -30,7 +30,7 @@ import pickle
 import torch
 
 from meta_optimizer.reptile import NAS_Reptile
-from models.search_cnn import SearchCNNController
+from models.search_cnn import SearchCNNController, SearchCell
 from models.augment_cnn import AugmentCNN
 from models.maml_model import MamlModel
 from task_optimizer.darts import Darts
@@ -89,7 +89,12 @@ def meta_architecture_search(
         config.normalizer_t_min,
         config.normalizer_temp_anneal_mode,
     )
-    meta_model = _build_model(config, task_distribution, normalizer)
+    
+    # meta_cell = SearchCell(4, C_pp,C_p,C_cur,reduction_p, reduction , PRIMITIVES)
+    meta_cell = SearchCell(4,84,84,28,False,False,gt.PRIMITIVES)
+
+    torch.save(meta_cell, "cell_check.pt")
+    meta_model = _build_model(meta_cell, config, task_distribution, normalizer)
     
 
     # task & meta optimizer
@@ -118,6 +123,7 @@ def meta_architecture_search(
     if not config.eval:
         config, meta_model, train_info = train(
             config,
+            meta_cell,
             meta_model,
             task_distribution,
             task_optimizer,
@@ -128,7 +134,6 @@ def meta_architecture_search(
     # meta testing
     ################################################################################################
     config.logger.info(f"train steps for evaluation:{ config.test_task_train_steps} ")
-
     # run the evaluation
     config, alpha_logger, sparse_params = evaluate(
         config, meta_model, task_distribution, task_optimizer
@@ -164,10 +169,11 @@ def _init_alpha_normalizer(name, task_train_steps, t_max, t_min, temp_anneal_mod
     return normalizer
 
 
-def _build_model(config, task_distribution, normalizer):
+def _build_model(meta_cell,config, task_distribution, normalizer):
 
     if config.meta_model == "searchcnn":
         meta_model = SearchCNNController(
+            meta_cell, 
             task_distribution.n_input_channels,
             config.init_channels,
             task_distribution.n_classes,
@@ -342,17 +348,19 @@ def _prune_alphas(meta_model, meta_model_prune_threshold):
 
 def train(
     config,
+    meta_cell,
     meta_model,
     task_distribution,
     task_optimizer,
     meta_optimizer,
-    meta_cell_optimizer,
+    meta_meta_optimizer,
     train_info=None,
 ):
     """Meta-training loop
 
     Args:
         config: Training configuration parameters
+        meta_cell : The meta_cell
         meta_model: The meta_model
         task_distribution: Task distribution object
         task_optimizer: A pytorch optimizer for task training
@@ -406,20 +414,18 @@ def train(
 
         # Each task starts with the current meta state
         meta_state = copy.deepcopy(meta_model.state_dict())
-        meta_layer_state = copy.deepcopy(meta_model.net.cells[0].state_dict())
         
         global_progress = f"[Meta-Epoch {meta_epoch:2d}/{config.meta_epochs}]"
         task_infos = []
         
         time_bs = time.time()
         for task in tqdm(meta_train_batch):
+            
             current_task_info = task_optimizer.step(
                     task, epoch=meta_epoch, global_progress=global_progress
             )
             task_infos += [current_task_info]
             
-            # meta_layer_reptile 가동 및 업데이트 , 
-            # 궁금합니다. 지금은 각 태스크 마다 레이어 별 합침을 사용합니다. 
             meta_model.load_state_dict(meta_state)
         
         time_be = time.time()
@@ -432,6 +438,10 @@ def train(
         # do a meta update
         
         meta_optimizer.step(task_infos)
+
+        #meta model has been updated.
+        meta_meta_optimizer.step(meta_cell,meta_model)
+        ############################################################
         # update meta LR
         if (a_meta_lr_scheduler is not None) and (meta_epoch >= config.warm_up_epochs):
             a_meta_lr_scheduler.step()
@@ -471,7 +481,6 @@ def train(
             task_infos = []
 
             for task in tqdm(meta_test_batch):
-                
 
                 task_infos += [
                     task_optimizer.step(
@@ -482,7 +491,7 @@ def train(
                     )
                 ]
                 meta_model.load_state_dict(meta_state)
-                
+                #torch.save(meta_model.state_dict(), "metaweights.pt")
             
 
             config.logger.info(
@@ -530,10 +539,10 @@ def train(
             total_time.reset()
             io_time.reset()
 
-            # prune alpha values in meta model every config.eval_freq epochs
-            _prune_alphas(
-                meta_model, meta_model_prune_threshold=config.meta_model_prune_threshold
-            )
+            # kbs_ prune alpha values in meta model every config.eval_freq epochs
+            # _prune_alphas(
+            #     meta_model, meta_model_prune_threshold=config.meta_model_prune_threshold
+            # )
 
     # end of meta train
     utils.save_state(
@@ -733,7 +742,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--test_task_train_steps",
         type=int,
-        default=50,
+        default=5,
         help="Number of training steps per task",
     )
 

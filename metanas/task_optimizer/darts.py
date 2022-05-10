@@ -74,11 +74,11 @@ class Darts:
         log_alphas = False
 
         if test_phase:
+            
             top1_logger = self.config.top1_logger_test
             losses_logger = self.config.losses_logger_test
             train_steps = self.config.test_task_train_steps
             arch_adap_steps = int(train_steps * self.config.test_adapt_steps)
-
             if alpha_logger is not None:
                 log_alphas = True
 
@@ -87,6 +87,9 @@ class Darts:
             losses_logger = self.config.losses_logger
             train_steps = self.config.task_train_steps
             arch_adap_steps = train_steps
+            
+
+            
 
         lr = self.config.w_lr
 
@@ -207,6 +210,7 @@ class Darts:
             self.model.drop_path_prob(0.0)
 
         with torch.no_grad():
+            
 
             for batch_idx, batch in enumerate(task.test_loader):
 
@@ -269,11 +273,11 @@ def train(
 ):
 
     model.train()
-    initial_model_weight = list(model.weights())
+    initial_model_weight = copy.deepcopy(model.weights)
     initial_model_alpha = list(model.alphas())
-
-    print(sum(initial_model_weight))
-    exit(0)
+    initial = 0 
+    
+    
     for step, ((train_X, train_y), (val_X, val_y)) in enumerate(
         zip(task.train_loader, task.valid_loader)
     ):
@@ -303,12 +307,10 @@ def train(
         w_optim.step()
     
     task_specific_weight = copy.deepcopy(model.weights)
+    # w_const_task = torch.mean(initial_model_weight) - torch.mean(task_specific_weight) / lr
+    # a_const_task = 0
 
-    w_const_task = torch.mean(initial_model_weight) - torch.mean(task_specific_weight) / lr
-    a_const_task = 0
-
-    if sum(w_const_task)== 0 :
-        print("0")
+    
 
     
 
