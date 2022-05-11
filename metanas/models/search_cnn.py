@@ -75,6 +75,7 @@ class SearchCNNController(nn.Module):
 
     def __init__(
         self,
+        meta_cell,
         C_in,
         C,
         n_classes,
@@ -168,6 +169,7 @@ class SearchCNNController(nn.Module):
                 self._alphas.append((n, p))
 
         self.net = SearchCNN(
+            meta_cell,
             C_in,
             C,
             n_classes,
@@ -596,6 +598,7 @@ class SearchCNN(nn.Module):
 
     def __init__(
         self,
+        meta_cell,
         C_in,
         C,
         n_classes,
@@ -623,6 +626,7 @@ class SearchCNN(nn.Module):
         self.C = C
         self.n_classes = n_classes
         self.n_layers = n_layers
+        self.meta_cell = meta_cell
 
         C_cur = stem_multiplier * C
         self.stem = nn.Sequential(
@@ -648,14 +652,16 @@ class SearchCNN(nn.Module):
             else:
                 reduction = False
 
-            cell = SearchCell(
-                n_nodes, C_pp, C_p, C_cur, reduction_p, reduction, PRIMITIVES
-            )
-            
+            # cell = SearchCell(
+            #     n_nodes, C_pp, C_p, C_cur, reduction_p, reduction, PRIMITIVES
+            # )
+            cell = self.meta_cell
             reduction_p = reduction
             self.cells.append(cell)
+            
             C_cur_out = C_cur * n_nodes
             C_pp, C_p = C_p, C_cur_out
+        
 
         self.gap = nn.AdaptiveAvgPool2d(1)
         self.linear = nn.Linear(C_p, n_classes)
@@ -721,6 +727,7 @@ class SearchCNN(nn.Module):
 
         
         for cell in self.cells:
+            
             weights = weights_reduce if cell.reduction else weights_normal
             weights_in = weights_in_reduce if cell.reduction else weights_in_normal
             weights_pw = weights_pw_reduce if cell.reduction else weights_pw_normal

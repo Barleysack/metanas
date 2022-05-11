@@ -99,7 +99,7 @@ def meta_architecture_search(
 
     # task & meta optimizer
     config, meta_optimizer = _init_meta_optimizer(
-        config, meta_optimizer_cls, meta_model
+        config, meta_optimizer_cls, meta_model , meta_cell
     )
     config, task_optimizer = _init_task_optimizer(
         config, task_optimizer_cls, meta_model
@@ -284,7 +284,7 @@ def load_pretrained_model(
     )
 
 
-def _init_meta_optimizer(config, meta_optimizer_class, meta_model):
+def _init_meta_optimizer(config, meta_optimizer_class, meta_model,meta_cell):
     if meta_optimizer_class == NAS_Reptile:
         # reptile uses SGD as meta optim
         config.w_meta_optim = torch.optim.SGD(meta_model.weights(), lr=config.w_meta_lr)
@@ -299,7 +299,7 @@ def _init_meta_optimizer(config, meta_optimizer_class, meta_model):
         raise RuntimeError(
             f"Meta-Optimizer {meta_optimizer_class} is not yet supported."
         )
-    meta_optimizer = meta_optimizer_class(meta_model, config)
+    meta_optimizer = meta_optimizer_class(meta_model, meta_cell, config)
     return config, meta_optimizer
 
 
@@ -353,7 +353,6 @@ def train(
     task_distribution,
     task_optimizer,
     meta_optimizer,
-    meta_meta_optimizer,
     train_info=None,
 ):
     """Meta-training loop
@@ -402,9 +401,17 @@ def train(
     w_meta_lr_scheduler, a_meta_lr_scheduler = _get_meta_lr_scheduler(
         config, meta_optimizer
     )
-
+    #alpha normalizer...need more work here
+    normalizer = _init_alpha_normalizer(
+        config.normalizer,
+        config.task_train_steps,
+        config.normalizer_t_max,
+        config.normalizer_t_min,
+        config.normalizer_temp_anneal_mode,
+    )
     for meta_epoch in range(config.start_epoch, config.meta_epochs + 1):
         
+
 
         time_es = time.time()
         meta_train_batch = task_distribution.sample_meta_train()
@@ -437,10 +444,10 @@ def train(
 
         # do a meta update
         
-        meta_optimizer.step(task_infos)
-
+        meta_optimizer.step(task_infos,meta_cell)
+        meta_model = _build_model(meta_cell, config, task_distribution, normalizer)
+        # print("model updated, now new cell is comin'")
         #meta model has been updated.
-        meta_meta_optimizer.step(meta_cell,meta_model)
         ############################################################
         # update meta LR
         if (a_meta_lr_scheduler is not None) and (meta_epoch >= config.warm_up_epochs):
@@ -736,13 +743,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--task_train_steps",
         type=int,
-        default=5,
+        default=1,
         help="Number of training steps per task",
     )
     parser.add_argument(
         "--test_task_train_steps",
         type=int,
-        default=5,
+        default=1,
         help="Number of training steps per task",
     )
 

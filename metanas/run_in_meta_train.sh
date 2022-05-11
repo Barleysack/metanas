@@ -29,29 +29,29 @@ args=(
     # number classes  
     --k 5 \
     # test examples per class
-    --q 5
+    --q 1
 
     --meta_model_prune_threshold 0.01 \
     --alpha_prune_threshold 0.01 \
     # Meta Learning
     --meta_model searchcnn \
-    --meta_epochs 1 \
+    --meta_epochs 5 \
     --warm_up_epochs 0 \
     --use_pairwise_input_alphas \
     --eval_freq 1 \
-    --eval_epochs 1 \
+    --eval_epochs 0 \
 
     --normalizer softmax \
     --normalizer_temp_anneal_mode linear \
     --normalizer_t_min 0.1 \
     --normalizer_t_max 1.0 \
     --drop_path_prob 0.2 \
+    --test_task_train_steps 5
 
     # Architectures
     --init_channels 28 \
     --layers 4 \
     --reduction_layers 1 3 \
-    
     --use_first_order_darts \
 
     --use_torchmeta_loader \

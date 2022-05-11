@@ -23,7 +23,7 @@ import copy
 import torch
 import torch.nn as nn
 from collections import OrderedDict, namedtuple
-
+from meta_optimizer.reptile import get_finite_difference
 from utils import utils
 from models.search_cnn import SearchCNNController
 
@@ -145,17 +145,17 @@ class Darts:
             if a_task_lr_scheduler is not None:
                 a_task_lr_scheduler.step()
 
-            train(
-                task,
-                self.model,
-                self.architect,
-                self.w_optim,
-                self.a_optim,
-                lr,
-                global_progress,
-                self.config,
-                warm_up,
-            )
+            task_specific_model = train(
+                                                        task,
+                                                        self.model,
+                                                        self.architect,
+                                                        self.w_optim,
+                                                        self.a_optim,
+                                                        lr,
+                                                        global_progress,
+                                                        self.config,
+                                                        warm_up,
+                                                        )
 
             if (
                 model_has_normalizer
@@ -179,6 +179,22 @@ class Darts:
                 for layer_name, layer_alpha in self.model.named_alphas()
                 if layer_alpha.grad is not None
             }
+        )
+
+        
+        w_task_power = OrderedDict(
+            {
+                layer_name: copy.deepcopy(layer_weight)
+                for layer_name, layer_weight in task_specific_model.named_weights()
+                
+            }
+        )
+        a_task_power = OrderedDict(
+            {
+                layer_name: copy.deepcopy(layer_alpha)
+                for layer_name, layer_alpha in task_specific_model.named_alphas()
+                
+        }
         )
 
         # Log genotype
@@ -243,6 +259,8 @@ class Darts:
                 "loss",
                 "y_test_pred",
                 "sparse_num_params",
+                "w_task_power",
+                "a_task_power"
             ],
         )
         task_info.w_task = w_task
@@ -256,6 +274,8 @@ class Darts:
         task_info.sparse_num_params = self.model.get_sparse_num_params(
             self.model.alpha_prune_threshold
         )
+        task_info.w_task_power = w_task_power
+        task_info.a_task_power = a_task_power
 
         return task_info
 
@@ -273,9 +293,8 @@ def train(
 ):
 
     model.train()
-    initial_model_weight = copy.deepcopy(model.weights)
-    initial_model_alpha = list(model.alphas())
-    initial = 0 
+    initial_model = copy.deepcopy(model)
+
     
     
     for step, ((train_X, train_y), (val_X, val_y)) in enumerate(
@@ -304,16 +323,37 @@ def train(
         loss = model.criterion(logits, train_y)
         loss.backward()
         nn.utils.clip_grad_norm_(model.weights(), config.w_grad_clip)
+        
         w_optim.step()
     
-    task_specific_weight = copy.deepcopy(model.weights)
+    task_specific_model = copy.deepcopy(model)
+
+    get_meta_arch_power(initial_model,task_specific_model)
+
+    return task_specific_model
+
+    
+
+
+
     # w_const_task = torch.mean(initial_model_weight) - torch.mean(task_specific_weight) / lr
     # a_const_task = 0
 
-    
+def get_meta_arch_power(init_model,task_model):
+
+    get_finite_difference(init_model.named_weights(),task_model.named_weights())
+    get_meta_power_diff(task_model.named_weights()) #its actually, taskmodel. 
+
+    get_finite_difference(init_model.named_alphas(),task_model.named_alphas())
+    get_meta_power_diff(task_model.named_alphas()) #also, taskmodel.
+
+    return task_model
 
     
-
+def get_meta_power_diff(param_generator):
+    for layer_name, layer_weight_tensor in param_generator:
+        torch.Tensor.mul_(layer_weight_tensor.data,layer_weight_tensor.data)
+    return param_generator
 
 class Architect:
     """ Compute gradients of alphas """
