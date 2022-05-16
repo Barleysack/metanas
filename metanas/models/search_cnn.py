@@ -90,7 +90,6 @@ class SearchCNNController(nn.Module):
         use_hierarchical_alphas=False,  # deprecated
         use_pairwise_input_alphas=False,
         alpha_prune_threshold=0.0,
-        initial_call=1
     ):
         super().__init__()
         self.n_nodes = n_nodes
@@ -98,7 +97,6 @@ class SearchCNNController(nn.Module):
         self.use_pairwise_input_alphas = use_pairwise_input_alphas
         self.use_hierarchical_alphas = use_hierarchical_alphas
         self.alpha_prune_threshold = alpha_prune_threshold
-
         if "name" not in normalizer.keys():
             normalizer["func"] = SoftMax
             normalizer["params"] = dict()
@@ -119,67 +117,67 @@ class SearchCNNController(nn.Module):
 
         
         
+    
+    # initialize architect parameters: alphas
+        if PRIMITIVES is None:
+            PRIMITIVES = gt.PRIMITIVES
 
-        if initial_call:
-        # initialize architect parameters: alphas
-            if PRIMITIVES is None:
-                PRIMITIVES = gt.PRIMITIVES
+        self.primitives = PRIMITIVES
+        n_ops = len(PRIMITIVES)
 
-            self.primitives = PRIMITIVES
-            n_ops = len(PRIMITIVES)
+        self.alpha_normal = nn.ParameterList()
+        self.alpha_reduce = nn.ParameterList()
 
-            self.alpha_normal = nn.ParameterList()
-            self.alpha_reduce = nn.ParameterList()
+        for i in range(n_nodes):
+            # create alpha parameters over parallel operations
+            self.alpha_normal.append(nn.Parameter(1e-3 * torch.randn(i + 2, n_ops)))
+            self.alpha_reduce.append(nn.Parameter(1e-3 * torch.randn(i + 2, n_ops)))
+        
+        
+
+    
+        assert not (
+            use_hierarchical_alphas and use_pairwise_input_alphas
+        ), "Hierarchical and pairwise alphas exclude each other."
+
+        self.alpha_pw_normal = None
+        self.alpha_pw_reduce = None
+        self.alpha_in_normal = None
+        self.alpha_in_reduce = None
+        if use_hierarchical_alphas:  # deprecated
+            # create alpha parameters the different input nodes for a cell, i.e. for each node in a
+            # cell an additional distribution over the input nodes is introduced
+            print("Using hierarchical alphas.")
+
+            self.alpha_in_normal = nn.ParameterList()
+            self.alpha_in_reduce = nn.ParameterList()
 
             for i in range(n_nodes):
-                # create alpha parameters over parallel operations
-                self.alpha_normal.append(nn.Parameter(1e-3 * torch.randn(i + 2, n_ops)))
-                self.alpha_reduce.append(nn.Parameter(1e-3 * torch.randn(i + 2, n_ops)))
-            
-            
+                self.alpha_in_normal.append(nn.Parameter(1e-3 * torch.randn(i + 2)))
+                self.alpha_in_reduce.append(nn.Parameter(1e-3 * torch.randn(i + 2)))
 
+        elif use_pairwise_input_alphas:
+            print("Using pairwise input alphas.")
+
+            self.alpha_pw_normal = nn.ParameterList()
+            self.alpha_pw_reduce = nn.ParameterList()
+
+            for i in range(n_nodes):
+                num_comb = int(scipy.special.binom(i + 2, 2))
+                self.alpha_pw_normal.append(nn.Parameter(1e-3 * torch.randn(num_comb)))
+                self.alpha_pw_reduce.append(nn.Parameter(1e-3 * torch.randn(num_comb)))
         
-            assert not (
-                use_hierarchical_alphas and use_pairwise_input_alphas
-            ), "Hierarchical and pairwise alphas exclude each other."
-
-            self.alpha_pw_normal = None
-            self.alpha_pw_reduce = None
-            self.alpha_in_normal = None
-            self.alpha_in_reduce = None
-            if use_hierarchical_alphas:  # deprecated
-                # create alpha parameters the different input nodes for a cell, i.e. for each node in a
-                # cell an additional distribution over the input nodes is introduced
-                print("Using hierarchical alphas.")
-
-                self.alpha_in_normal = nn.ParameterList()
-                self.alpha_in_reduce = nn.ParameterList()
-
-                for i in range(n_nodes):
-                    self.alpha_in_normal.append(nn.Parameter(1e-3 * torch.randn(i + 2)))
-                    self.alpha_in_reduce.append(nn.Parameter(1e-3 * torch.randn(i + 2)))
-
-            elif use_pairwise_input_alphas:
-                print("Using pairwise input alphas.")
-
-                self.alpha_pw_normal = nn.ParameterList()
-                self.alpha_pw_reduce = nn.ParameterList()
-
-                for i in range(n_nodes):
-                    num_comb = int(scipy.special.binom(i + 2, 2))
-                    self.alpha_pw_normal.append(nn.Parameter(1e-3 * torch.randn(num_comb)))
-                    self.alpha_pw_reduce.append(nn.Parameter(1e-3 * torch.randn(num_comb)))
         
-        else:
-            '''get alpha from current meta cell, repeat it with same names'''
-            pass
-
+        # now I have to get the alpha
+        # but, how? maybe I dont need to know...
 
         # setup alphas list
         self._alphas = []
+        
         for n, p in self.named_parameters():
             if "alpha" in n:
                 self._alphas.append((n, p))
+                print(n)
 
         
         
@@ -196,9 +194,7 @@ class SearchCNNController(nn.Module):
             feature_scale_rate=feature_scale_rate,
         )
 
-        for n, p in self.net.named_parameters():
-            if "alpha" in n:
-                print(n)
+        
 
     def apply_normalizer(self, alpha):
         return self.normalizer["func"](alpha, self.normalizer["params"])
@@ -465,7 +461,6 @@ class SearchCNNController(nn.Module):
         Returns:
             The network output
         """
-
         (
             weights_normal,
             weights_reduce,
@@ -487,13 +482,13 @@ class SearchCNNController(nn.Module):
                 sparsify_input_alphas=sparsify_input_alphas,
                 alpha_prune_threshold=self.alpha_prune_threshold,
             )
-
+        
         # scatter x
         xs = nn.parallel.scatter(x, self.device_ids)
         # broadcast weights
         wnormal_copies = broadcast_list(weights_normal, self.device_ids)
         wreduce_copies = broadcast_list(weights_reduce, self.device_ids)
-
+        
         if weights_in_normal is not None:
             wnormal_in_copies = broadcast_list(weights_in_normal, self.device_ids)
             wreduce_in_copies = broadcast_list(weights_in_reduce, self.device_ids)
@@ -608,7 +603,6 @@ def broadcast_list(l, device_ids):
     """ Broadcasting list """
     l_copies = Broadcast.apply(device_ids, *l)
     l_copies = [l_copies[i : i + len(l)] for i in range(0, len(l_copies), len(l))]
-
     return l_copies
 
 
@@ -726,9 +720,8 @@ class SearchCNN(nn.Module):
 
         """
         s0 = s1 = self.stem(x)
-        print(weights_normal)
         if sparsify_input_alphas:
-
+            
             # always sparsify edge alphas (keep only edge with max prob for each previous node)
             weights_normal = sparsify_alphas(weights_normal)
             weights_reduce = sparsify_alphas(weights_reduce)

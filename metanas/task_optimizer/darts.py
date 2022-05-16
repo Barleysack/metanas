@@ -312,8 +312,12 @@ def train(
                 architect.virtual_step(train_X, train_y, lr, w_optim)  # (calc w`)
 
             architect.backward(train_X, train_y, val_X, val_y, lr, w_optim)
-
+            
             alpha_optim.step()
+            
+            
+
+
 
         # phase 1. child network step (w)
         w_optim.zero_grad()
@@ -422,7 +426,6 @@ class Architect:
         v_alphas = tuple(self.v_net.alphas())
         
         v_weights = tuple(self.v_net.weights())
-        
         v_grads = torch.autograd.grad(loss, v_alphas + v_weights, allow_unused=True)
         dalpha = v_grads[: len(v_alphas)]
         dw = v_grads[len(v_alphas) :]

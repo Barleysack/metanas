@@ -110,9 +110,9 @@ def meta_architecture_search(
             config.model_path, meta_model, task_optimizer, meta_optimizer
         )
 
-    config.logger.info(f"alpha initial = {[alpha for alpha in meta_model.alphas()]} ")
+    # config.logger.info(f"alpha initial = {[alpha for alpha in meta_model.alphas()]} ")
 
-    utils.print_config_params(config, config.logger.info)
+    # utils.print_config_params(config, config.logger.info)
 
     # meta training
     ################################################################################################
@@ -401,7 +401,6 @@ def train(
     w_meta_lr_scheduler, a_meta_lr_scheduler = _get_meta_lr_scheduler(
         config, meta_optimizer
     )
-    #alpha normalizer...need more work here
     normalizer = _init_alpha_normalizer(
         config.normalizer,
         config.task_train_steps,
@@ -411,6 +410,8 @@ def train(
     )
     if config.wandb:
         wandb.init(config=config)
+
+
     for meta_epoch in range(config.start_epoch, config.meta_epochs + 1):
         
 
@@ -434,9 +435,8 @@ def train(
                     task, epoch=meta_epoch, global_progress=global_progress
             )
             task_infos += [current_task_info]
-            
             meta_model.load_state_dict(meta_state)
-        
+
         time_be = time.time()
 
         batch_time.update(time_be - time_bs)
@@ -491,7 +491,7 @@ def train(
             global_progress = f"[Meta-Epoch {meta_epoch:2d}/{config.meta_epochs}]"
             task_infos = []
 
-            for task in (meta_test_batch):
+            for task in tqdm(meta_test_batch):
 
                 task_infos += [
                     task_optimizer.step(
@@ -502,8 +502,6 @@ def train(
                     )
                 ]
                 meta_model.load_state_dict(meta_state)
-                #torch.save(meta_model.state_dict(), "metaweights.pt")
-            
 
             config.logger.info(
                 f"Train: [{meta_epoch:2d}/{config.meta_epochs}] "
@@ -552,10 +550,7 @@ def train(
             total_time.reset()
             io_time.reset()
 
-            # kbs_ prune alpha values in meta model every config.eval_freq epochs
-            # _prune_alphas(
-            #     meta_model, meta_model_prune_threshold=config.meta_model_prune_threshold
-            # )
+            
 
     # end of meta train
     utils.save_state(

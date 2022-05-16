@@ -57,7 +57,7 @@ args=(
     --use_torchmeta_loader \
     # experiments
     --exp_const 1
-    --exp_cell 0
+    --exp_cell 1
     --wandb 0
 )
 

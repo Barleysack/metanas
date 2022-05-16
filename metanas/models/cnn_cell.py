@@ -88,6 +88,7 @@ class SearchCell(nn.Module):
                 ):
                     if w_in > 0:
                         s_cur = s_cur + w_in * edges[i](state_in, w_ops)
+                        
 
                 # equivalent but harder to read:
                 # s_cur2 = sum(w2 * edges[i](s, w)
@@ -138,9 +139,9 @@ class SearchCell(nn.Module):
                     edges[i](s, w, alpha_prune_threshold=alpha_prune_threshold)
                     for i, (s, w) in enumerate(zip(states, w_list))
                 )
+                
 
                 states.append(s_cur)
-
         s_out = torch.cat(
             states[2:], dim=1
         )  # concatenate all intermediate nodes except inputs
