@@ -35,7 +35,7 @@ args=(
     --alpha_prune_threshold 0.01 \
     # Meta Learning
     --meta_model searchcnn \
-    --meta_epochs 5 \
+    --meta_epochs 100 \
     --warm_up_epochs 0 \
     --use_pairwise_input_alphas \
     --eval_freq 1 \
@@ -46,7 +46,7 @@ args=(
     --normalizer_t_min 0.1 \
     --normalizer_t_max 1.0 \
     --drop_path_prob 0.2 \
-    --test_task_train_steps 5
+    --test_task_train_steps 10
 
     # Architectures
     --init_channels 28 \
@@ -55,7 +55,10 @@ args=(
     --use_first_order_darts \
 
     --use_torchmeta_loader \
-
+    # experiments
+    --exp_const 1
+    --exp_cell 0
+    --wandb 0
 )
 
 

@@ -69,7 +69,6 @@ class NAS_Reptile:
         
 
 
-        print("MB log, " ,utils.count_parameters_in_MB(self.meta_model.net))
         self.w_meta_optim.zero_grad()
         self.a_meta_optim.zero_grad()
 
@@ -93,11 +92,11 @@ class NAS_Reptile:
                 get_finite_difference(self.meta_model.named_alphas(), task_info.a_task)
             ]
         #########################################
-        bo_experiment = 1
-        cell_start = 1
+        
         #########################################
 
-        if bo_experiment:
+        if self.config.exp_const:
+            
             for idx, task_info in enumerate(task_infos):
                 w_const_list += [
                     get_const(w_finite_differences[idx],w_const_bottom)
@@ -118,7 +117,7 @@ class NAS_Reptile:
                 if self.a_meta_optim is not None:
                     self.a_meta_optim.step()
 
-            if cell_start:
+            if self.config.exp_cell:
                
                 
 

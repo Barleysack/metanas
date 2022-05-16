@@ -311,7 +311,6 @@ def train(
             if config.do_unrolled_architecture_steps:
                 architect.virtual_step(train_X, train_y, lr, w_optim)  # (calc w`)
 
-                # add a_accum here, start from here _ bosung
             architect.backward(train_X, train_y, val_X, val_y, lr, w_optim)
 
             alpha_optim.step()
@@ -369,6 +368,8 @@ class Architect:
         self.w_momentum = w_momentum
         self.w_weight_decay = w_weight_decay
         self.use_first_order_darts = use_first_order_darts
+        
+        
 
     def virtual_step(self, train_X, train_y, xi, w_optim):
         """
@@ -386,10 +387,15 @@ class Architect:
         """
         # forward & calc loss
         loss = self.net.loss(train_X, train_y)  # L_train(w)
-
         # compute gradient
         gradients = torch.autograd.grad(loss, self.net.weights())
 
+        
+        
+
+
+
+        
         # do virtual step (update gradient)
         # below operations do not need gradient tracking
         with torch.no_grad():

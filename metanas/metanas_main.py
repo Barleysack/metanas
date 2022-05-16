@@ -18,13 +18,13 @@ Based on https://github.com/khanrc/pt.darts
 which is licensed under MIT License,
 cf. 3rd-party-licenses.txt in root directory.
 """
-
+import wandb
 import argparse
 from collections import OrderedDict
 import copy
 import os
 import time
-
+from pprint import pprint as print
 import numpy as np
 import pickle
 import torch
@@ -93,7 +93,6 @@ def meta_architecture_search(
     # meta_cell = SearchCell(4, C_pp,C_p,C_cur,reduction_p, reduction , PRIMITIVES)
     meta_cell = SearchCell(4,84,84,28,False,False,gt.PRIMITIVES)
 
-    torch.save(meta_cell, "cell_check.pt")
     meta_model = _build_model(meta_cell, config, task_distribution, normalizer)
     
 
@@ -188,7 +187,7 @@ def _build_model(meta_cell,config, task_distribution, normalizer):
             use_pairwise_input_alphas=config.use_pairwise_input_alphas,
             alpha_prune_threshold=config.alpha_prune_threshold,
         )
-
+    
     elif config.meta_model == "maml":
 
         if config.dataset == "omniglot":
@@ -266,6 +265,7 @@ def _build_model(meta_cell,config, task_distribution, normalizer):
         )
     else:
         raise RuntimeError(f"Unknown meta_model {config.meta_model}")
+    
     return meta_model.to(config.device)
 
 
@@ -409,6 +409,8 @@ def train(
         config.normalizer_t_min,
         config.normalizer_temp_anneal_mode,
     )
+    if config.wandb:
+        wandb.init(config=config)
     for meta_epoch in range(config.start_epoch, config.meta_epochs + 1):
         
 
@@ -424,9 +426,9 @@ def train(
         
         global_progress = f"[Meta-Epoch {meta_epoch:2d}/{config.meta_epochs}]"
         task_infos = []
-        
+        p_bar= tqdm(meta_train_batch)
         time_bs = time.time()
-        for task in tqdm(meta_train_batch):
+        for task in p_bar:
             
             current_task_info = task_optimizer.step(
                     task, epoch=meta_epoch, global_progress=global_progress
@@ -441,11 +443,13 @@ def train(
 
         train_test_loss.append(config.losses_logger.avg)
         train_test_accu.append(config.top1_logger.avg)
-
+        p_bar.set_postfix({'test acc' : config.top1_logger.avg})
         # do a meta update
-        
         meta_optimizer.step(task_infos,meta_cell)
-        meta_model = _build_model(meta_cell, config, task_distribution, normalizer)
+
+        if config.exp_cell == 1:
+            meta_model = _build_model(meta_cell, config, task_distribution, normalizer)
+
         # print("model updated, now new cell is comin'")
         #meta model has been updated.
         ############################################################
@@ -487,7 +491,7 @@ def train(
             global_progress = f"[Meta-Epoch {meta_epoch:2d}/{config.meta_epochs}]"
             task_infos = []
 
-            for task in tqdm(meta_test_batch):
+            for task in (meta_test_batch):
 
                 task_infos += [
                     task_optimizer.step(
@@ -506,6 +510,8 @@ def train(
                 f"Test-TestLoss {config.losses_logger_test.avg:.3f} "
                 f"Test-TestPrec@(1,) ({config.top1_logger_test.avg:.1%}, {1.00:.1%})"
             )
+            if config.wandb:
+                wandb.log({'eval_acc' : config.top1_logger_test.avg})
 
             test_test_loss.append(config.losses_logger_test.avg)
             test_test_accu.append(config.top1_logger_test.avg)
@@ -825,7 +831,7 @@ if __name__ == "__main__":
         type=int,
         help="Training examples per class / support set (for meta testing).",
     )
-
+    
     parser.add_argument(
         "--n_train",
         default=15,
@@ -923,7 +929,25 @@ if __name__ == "__main__":
         help="sparsify_input_alphas input for the search_cnn forward pass "
         "during final evaluation.",
     )  #### deprecated
-
+    # Experiment
+    parser.add_argument(
+        "--exp_const",
+        type=int,
+        default=0,
+        help="begin experiment or not"
+    )
+    parser.add_argument(
+        "--exp_cell",
+        type=int,
+        default = 0,
+        help="cell experiments, begin"
+    )
+    parser.add_argument(
+        "--wandb",
+        type=int,
+        default=0,
+        help="we cannot run exp runs all time..."
+    )
     args = parser.parse_args()
     args.path = os.path.join(
         args.path, ""

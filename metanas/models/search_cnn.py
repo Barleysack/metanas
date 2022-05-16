@@ -90,6 +90,7 @@ class SearchCNNController(nn.Module):
         use_hierarchical_alphas=False,  # deprecated
         use_pairwise_input_alphas=False,
         alpha_prune_threshold=0.0,
+        initial_call=1
     ):
         super().__init__()
         self.n_nodes = n_nodes
@@ -116,51 +117,63 @@ class SearchCNNController(nn.Module):
             device_ids = list(range(torch.cuda.device_count()))
         self.device_ids = device_ids
 
+        
+        
+
+        if initial_call:
         # initialize architect parameters: alphas
-        if PRIMITIVES is None:
-            PRIMITIVES = gt.PRIMITIVES
+            if PRIMITIVES is None:
+                PRIMITIVES = gt.PRIMITIVES
 
-        self.primitives = PRIMITIVES
-        n_ops = len(PRIMITIVES)
+            self.primitives = PRIMITIVES
+            n_ops = len(PRIMITIVES)
 
-        self.alpha_normal = nn.ParameterList()
-        self.alpha_reduce = nn.ParameterList()
-
-        for i in range(n_nodes):
-            # create alpha parameters over parallel operations
-            self.alpha_normal.append(nn.Parameter(1e-3 * torch.randn(i + 2, n_ops)))
-            self.alpha_reduce.append(nn.Parameter(1e-3 * torch.randn(i + 2, n_ops)))
-
-        assert not (
-            use_hierarchical_alphas and use_pairwise_input_alphas
-        ), "Hierarchical and pairwise alphas exclude each other."
-
-        self.alpha_pw_normal = None
-        self.alpha_pw_reduce = None
-        self.alpha_in_normal = None
-        self.alpha_in_reduce = None
-        if use_hierarchical_alphas:  # deprecated
-            # create alpha parameters the different input nodes for a cell, i.e. for each node in a
-            # cell an additional distribution over the input nodes is introduced
-            print("Using hierarchical alphas.")
-
-            self.alpha_in_normal = nn.ParameterList()
-            self.alpha_in_reduce = nn.ParameterList()
+            self.alpha_normal = nn.ParameterList()
+            self.alpha_reduce = nn.ParameterList()
 
             for i in range(n_nodes):
-                self.alpha_in_normal.append(nn.Parameter(1e-3 * torch.randn(i + 2)))
-                self.alpha_in_reduce.append(nn.Parameter(1e-3 * torch.randn(i + 2)))
+                # create alpha parameters over parallel operations
+                self.alpha_normal.append(nn.Parameter(1e-3 * torch.randn(i + 2, n_ops)))
+                self.alpha_reduce.append(nn.Parameter(1e-3 * torch.randn(i + 2, n_ops)))
+            
+            
 
-        elif use_pairwise_input_alphas:
-            print("Using pairwise input alphas.")
+        
+            assert not (
+                use_hierarchical_alphas and use_pairwise_input_alphas
+            ), "Hierarchical and pairwise alphas exclude each other."
 
-            self.alpha_pw_normal = nn.ParameterList()
-            self.alpha_pw_reduce = nn.ParameterList()
+            self.alpha_pw_normal = None
+            self.alpha_pw_reduce = None
+            self.alpha_in_normal = None
+            self.alpha_in_reduce = None
+            if use_hierarchical_alphas:  # deprecated
+                # create alpha parameters the different input nodes for a cell, i.e. for each node in a
+                # cell an additional distribution over the input nodes is introduced
+                print("Using hierarchical alphas.")
 
-            for i in range(n_nodes):
-                num_comb = int(scipy.special.binom(i + 2, 2))
-                self.alpha_pw_normal.append(nn.Parameter(1e-3 * torch.randn(num_comb)))
-                self.alpha_pw_reduce.append(nn.Parameter(1e-3 * torch.randn(num_comb)))
+                self.alpha_in_normal = nn.ParameterList()
+                self.alpha_in_reduce = nn.ParameterList()
+
+                for i in range(n_nodes):
+                    self.alpha_in_normal.append(nn.Parameter(1e-3 * torch.randn(i + 2)))
+                    self.alpha_in_reduce.append(nn.Parameter(1e-3 * torch.randn(i + 2)))
+
+            elif use_pairwise_input_alphas:
+                print("Using pairwise input alphas.")
+
+                self.alpha_pw_normal = nn.ParameterList()
+                self.alpha_pw_reduce = nn.ParameterList()
+
+                for i in range(n_nodes):
+                    num_comb = int(scipy.special.binom(i + 2, 2))
+                    self.alpha_pw_normal.append(nn.Parameter(1e-3 * torch.randn(num_comb)))
+                    self.alpha_pw_reduce.append(nn.Parameter(1e-3 * torch.randn(num_comb)))
+        
+        else:
+            '''get alpha from current meta cell, repeat it with same names'''
+            pass
+
 
         # setup alphas list
         self._alphas = []
@@ -168,6 +181,8 @@ class SearchCNNController(nn.Module):
             if "alpha" in n:
                 self._alphas.append((n, p))
 
+        
+        
         self.net = SearchCNN(
             meta_cell,
             C_in,
@@ -180,6 +195,10 @@ class SearchCNNController(nn.Module):
             PRIMITIVES=self.primitives,
             feature_scale_rate=feature_scale_rate,
         )
+
+        for n, p in self.net.named_parameters():
+            if "alpha" in n:
+                print(n)
 
     def apply_normalizer(self, alpha):
         return self.normalizer["func"](alpha, self.normalizer["params"])
@@ -707,7 +726,7 @@ class SearchCNN(nn.Module):
 
         """
         s0 = s1 = self.stem(x)
-
+        print(weights_normal)
         if sparsify_input_alphas:
 
             # always sparsify edge alphas (keep only edge with max prob for each previous node)
